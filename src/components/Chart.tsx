@@ -16,7 +16,7 @@ const Chart = ({ data }: ChartProps) => {
 					stroke="#383d45"
 				/>
 				<Line type="monotone" dataKey="horaSup" stroke="#4ade80" />
-				<Line type="monotone" dataKey="ooeSup" stroke="#f87171" />
+				<Line type="monotone" dataKey="cfunSup" stroke="#f87171" />
 			</LineChart>
 		</ResponsiveContainer>
 	);

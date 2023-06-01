@@ -1,39 +1,11 @@
 import React from "react";
-import Table from "@/components/Table";
-import Chart from "@/components/Chart";
 import Head from "next/head";
 
-const login = "LogicCF";
-const password = "#L0g1ctr0n#";
+import Table from "@/components/Table";
+import Chart from "@/components/Chart";
+import { Item } from "@/interfaces";
 
-export default function Home() {
-	const [data, setData] = React.useState(null);
-
-	React.useEffect(() => {
-		const getData = async () => {
-			try {
-				const res = await fetch(
-					"http://logictron.ddnsking.com:43211//vsupervisor?tipo=visual",
-					{
-						headers: {
-							Authorization: "Basic " + btoa(login + ":" + password),
-							"Content-Type": "application/json",
-						},
-					}
-				);
-
-				const data = await res.json();
-
-				if (res.ok) {
-					setData(data);
-				}
-			} catch (error) {
-				console.log(error);
-			}
-		};
-		getData();
-	}, []);
-
+export default function Home({ data }: { data: Item[] }) {
 	if (data)
 		return (
 			<>
@@ -54,3 +26,25 @@ export default function Home() {
 		);
 	return null;
 }
+
+export const getServerSideProps = async () => {
+	const configFile = await fetch("http://localhost:3000/api/config.ini");
+	const config = await configFile.json();
+
+	const apiUrl = config.API_URL;
+	const login = config.API_USER;
+	const password = config.API_PASSWORD;
+
+	const res = await fetch(apiUrl, {
+		headers: {
+			Authorization: "Basic " + btoa(login + ":" + password),
+			"Content-Type": "application/json",
+		},
+	});
+
+	const data = await res.json();
+
+	return {
+		props: { data: data }, // will be passed to the page component as props
+	};
+};
